@@ -1,0 +1,62 @@
+---
+title: "Rose Chart on London Crime Data"
+author: "Xiaolin Ye"
+date: '06 de Abril de 2022'
+output:
+  html_document:
+    number_sections: yes
+    toc: true
+    toc_depth: 2
+    theme: united
+  pdf_document:
+    number_section: yes
+    toc: yes
+    toc_depth: 2
+lang: es
+---
+
+# Lectura del fichero y preparación de los datos
+
+cargamos el fichero y visualizamos las primeras filas.
+```{r,eval=TRUE,echo=TRUE}
+ds <- read.csv("10822bsc.csv", sep=";", header = TRUE)
+ds <- ds[!ds$País.de.residencia == "Total",] 
+head(ds)
+```
+
+
+```{r,eval=TRUE,echo=TRUE}
+ds$Total = as.numeric(gsub("\\.", "", ds$Total))
+ds$Total[is.na(ds$Total)] = 0
+
+ds$Periodo<- gsub("^(2021M)(.*)", "\\2", ds$Periodo)
+
+```
+
+
+
+```{r,eval=TRUE,echo=TRUE}
+require(ggplot2)
+library(RColorBrewer)
+
+mycolors <- colorRampPalette(brewer.pal(8, "Set1"))(15)
+
+p<-ggplot(data=ds, aes(x=Periodo, y=Total/1000000, fill=País.de.residencia)) +  
+  geom_bar(stat="identity",width=1,colour="black",size=0.1) + coord_polar() +
+  scale_fill_manual(values = mycolors) +
+  theme_minimal()
+
+p <- p + guides(fill=guide_legend(title="País de residencia")) + 
+  ggtitle("Número de turistas por mes y país de residencia (millones) durante 2021") +
+  xlab("")+ylab("")
+p
+
+
+```
+
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+ggsave("Turismo en 2021.png",device="png",path="./fig/", )
+```
