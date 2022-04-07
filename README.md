@@ -1,6 +1,6 @@
 # Visualización
 
-![rose_chart](fig/Turismo%en%2021.png)
+![rose_chart](fig/Turismo en 2021.png)
 
 # Header 1
 ## Header 2
